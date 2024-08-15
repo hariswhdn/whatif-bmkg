@@ -1,16 +1,10 @@
-# whatif_bmkg
+# WhatIf BMKG Down
 
-A new Flutter project.
+## Download
+Android  
+[Google Drive](https://drive.google.com/drive/folders/15nFvkquSIVAbh43JRsV6_y4utk4upWjB?usp=drive_link)  
+[VirusTotal 0/69](https://www.virustotal.com/gui/file/e7795159f9521a6aabe006a939f350597f779a4a053382e4457a580a2f0ddb99)
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## API
+[BMKG](https://data.bmkg.go.id/gempabumi/)  
+[USGS](https://earthquake.usgs.gov/fdsnws/event/1/)
