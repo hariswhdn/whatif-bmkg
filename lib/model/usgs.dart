@@ -46,13 +46,13 @@ class Geometry {
     this.coordinates,
   });
 
-  List<double>? coordinates;
+  List<num>? coordinates;
 
   factory Geometry.fromJson(Map<String, dynamic> json) {
     return Geometry(
       coordinates: json["coordinates"] == null
           ? []
-          : List<double>.from(json["coordinates"]),
+          : List<num>.from(json["coordinates"]),
     );
   }
 
@@ -69,10 +69,10 @@ class Properties {
     this.tsunami,
   });
 
-  double? mag;
+  num? mag;
   String? place;
-  int? time;
-  int? tsunami;
+  num? time;
+  num? tsunami;
 
   factory Properties.fromJson(Map<String, dynamic> json) {
     return Properties(

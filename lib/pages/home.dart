@@ -9,32 +9,8 @@ import '../model/usgs.dart';
 import '../components/card.dart';
 import '../components/text.dart';
 import 'package:intl/intl.dart';
-
-String formatWilayah(String str) {
-  final List<String> arrText = str.split('of ');
-  String arrTextOne = arrText[0]
-      .replaceAll(' ENE ', ' TimurTimurLaut')
-      .replaceAll(' NNE ', ' UtaraTimurLaut')
-      .replaceAll(' NE ', ' TimurLaut')
-      .replaceAll(' N ', ' Utara')
-      .replaceAll(' SSE ', ' SelatanTenggara')
-      .replaceAll(' ESE ', ' TimurTenggara')
-      .replaceAll(' SE ', ' Tenggara')
-      .replaceAll(' E ', ' Timur')
-      .replaceAll(' WSW ', ' BaratBaratDaya')
-      .replaceAll(' SSW ', ' SelatanBaratDaya')
-      .replaceAll(' SW ', ' BaratDaya')
-      .replaceAll(' S ', ' Selatan')
-      .replaceAll(' NNW ', ' UtaraBaratLaut')
-      .replaceAll(' WNW ', ' BaratBaratLaut')
-      .replaceAll(' NW ', ' BaratLaut')
-      .replaceAll(' W ', ' Barat');
-  String arrTextTwo = '';
-  if (arrText.length > 1) {
-    arrTextTwo = " ${arrText[1].replaceAll(', ', '-').toUpperCase()}";
-  }
-  return "$arrTextOne$arrTextTwo";
-}
+import '../utils/format.dart';
+import 'dart:developer';
 
 class AnimatedMapControllerPage extends StatefulWidget {
   static const String route = '/map_controller_animated';
@@ -57,6 +33,7 @@ class AnimatedMapControllerPageState extends State<AnimatedMapControllerPage>
           Uri.parse('https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json'));
       if (response.statusCode == 200) {
         setState(() {
+          // log(jsonEncode(json.decode(response.body)));
           dataBmkg = ModelBmkg.fromJson(json.decode(response.body));
         });
       }
@@ -71,10 +48,13 @@ class AnimatedMapControllerPageState extends State<AnimatedMapControllerPage>
           "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=5&starttime=$thirtyDaysAgo&minlatitude=-11.107187&minlongitude=95.011198&maxlatitude=5.907130&maxlongitude=141.020354&limit=15"));
       if (response.statusCode == 200) {
         setState(() {
+          // log(jsonEncode(json.decode(response.body)));
           dataUsgs = ModelUsgs.fromJson(json.decode(response.body));
         });
       }
-    } catch (_) {}
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   @override
@@ -133,7 +113,17 @@ class AnimatedMapControllerPageState extends State<AnimatedMapControllerPage>
                               weight: FontWeight.bold,
                             ),
                             const SizedBox(height: 6),
-                            text('Gempabumi Terkini (M ≥ 5.0)'),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                text('Gempabumi Terkini (M ≥ 5.0)'),
+                                text(
+                                  "Menampilkan ${dataBmkg?.infogempa?.gempa?.length ?? 0} data",
+                                  color: Colors.black45,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -277,17 +267,35 @@ class AnimatedMapControllerPageState extends State<AnimatedMapControllerPage>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            text(
-                              'USGS',
-                              size: 18,
-                              weight: FontWeight.bold,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                text(
+                                  'USGS',
+                                  size: 18,
+                                  weight: FontWeight.bold,
+                                ),
+                                const SizedBox(width: 12),
+                                Flexible(
+                                  child: text(
+                                    'Data USGS dapat termasuk negara tetangga',
+                                    color: Colors.black45,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 6),
-                            text('Gempabumi Terkini (M ≥ 5.0)'),
-                            const SizedBox(height: 6),
-                            text(
-                              'Data USGS dapat termasuk negara tetangga',
-                              color: Colors.black54,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                text('Gempabumi Terkini (M ≥ 5.0)'),
+                                text(
+                                  "Menampilkan ${dataUsgs?.features?.length ?? 0} data",
+                                  color: Colors.black45,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -317,24 +325,25 @@ class AnimatedMapControllerPageState extends State<AnimatedMapControllerPage>
                                             tanggal: DateFormat('dd MMM yyyy')
                                                 .format(
                                                   DateTime.fromMillisecondsSinceEpoch(
-                                                          dataUsgs
-                                                                  ?.features?[
-                                                                      index]
-                                                                  .properties
-                                                                  ?.time ??
-                                                              0)
-                                                      .toLocal(),
-                                                )
-                                                .toString(),
-                                            jam:
-                                                "${DateFormat('HH:mm:ss').format(
-                                                      DateTime.fromMillisecondsSinceEpoch(
-                                                              dataUsgs
+                                                          (dataUsgs
                                                                       ?.features?[
                                                                           index]
                                                                       .properties
                                                                       ?.time ??
                                                                   0)
+                                                              .toInt())
+                                                      .toLocal(),
+                                                )
+                                                .toString(),
+                                            jam:
+                                                "${DateFormat('HH:mm:ss').format(
+                                                      DateTime.fromMillisecondsSinceEpoch((dataUsgs
+                                                                      ?.features?[
+                                                                          index]
+                                                                      .properties
+                                                                      ?.time ??
+                                                                  0)
+                                                              .toInt())
                                                           .toLocal(),
                                                     ).toString()} WIB",
                                             lintang: dataUsgs?.features?[index]
@@ -366,17 +375,21 @@ class AnimatedMapControllerPageState extends State<AnimatedMapControllerPage>
                                               child: FlutterMap(
                                                 options: MapOptions(
                                                   initialCenter: LatLng(
-                                                      dataUsgs
-                                                                  ?.features?[index]
+                                                      (dataUsgs
+                                                                      ?.features?[
+                                                                          index]
+                                                                      .geometry
+                                                                      ?.coordinates?[
+                                                                  1] ??
+                                                              0)
+                                                          .toDouble(),
+                                                      (dataUsgs
+                                                                  ?.features?[
+                                                                      index]
                                                                   .geometry
-                                                                  ?.coordinates?[
-                                                              1] ??
-                                                          0,
-                                                      dataUsgs
-                                                              ?.features?[index]
-                                                              .geometry
-                                                              ?.coordinates?[0] ??
-                                                          0),
+                                                                  ?.coordinates?[0] ??
+                                                              0)
+                                                          .toDouble()),
                                                   initialZoom: 6.875,
                                                   interactionOptions:
                                                       const InteractionOptions(
@@ -394,19 +407,21 @@ class AnimatedMapControllerPageState extends State<AnimatedMapControllerPage>
                                                         width: 16,
                                                         height: 16,
                                                         point: LatLng(
-                                                            dataUsgs
+                                                            (dataUsgs
+                                                                            ?.features?[
+                                                                                index]
+                                                                            .geometry
+                                                                            ?.coordinates?[
+                                                                        1] ??
+                                                                    0)
+                                                                .toDouble(),
+                                                            (dataUsgs
                                                                         ?.features?[
                                                                             index]
                                                                         .geometry
-                                                                        ?.coordinates?[
-                                                                    1] ??
-                                                                0,
-                                                            dataUsgs
-                                                                    ?.features?[
-                                                                        index]
-                                                                    .geometry
-                                                                    ?.coordinates?[0] ??
-                                                                0),
+                                                                        ?.coordinates?[0] ??
+                                                                    0)
+                                                                .toDouble()),
                                                         child: Container(
                                                           width: 16,
                                                           height: 16,
@@ -442,20 +457,20 @@ class AnimatedMapControllerPageState extends State<AnimatedMapControllerPage>
                             child: card(
                               tanggal: DateFormat('dd MMM yyyy')
                                   .format(
-                                    DateTime.fromMillisecondsSinceEpoch(dataUsgs
-                                                ?.features?[index]
-                                                .properties
-                                                ?.time ??
-                                            0)
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                            (dataUsgs?.features?[index]
+                                                        .properties?.time ??
+                                                    0)
+                                                .toInt())
                                         .toLocal(),
                                   )
                                   .toString(),
                               jam: "${DateFormat('HH:mm:ss').format(
-                                    DateTime.fromMillisecondsSinceEpoch(dataUsgs
-                                                ?.features?[index]
-                                                .properties
-                                                ?.time ??
-                                            0)
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                            (dataUsgs?.features?[index]
+                                                        .properties?.time ??
+                                                    0)
+                                                .toInt())
                                         .toLocal(),
                                   ).toString()} WIB",
                               lintang: dataUsgs

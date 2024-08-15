@@ -1,6 +1,6 @@
 {
-    "name": "whatif_bmkg",
-    "short_name": "whatif_bmkg",
+    "name": "WhatIf BMKG Down",
+    "short_name": "WhatIf BMKG Down",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

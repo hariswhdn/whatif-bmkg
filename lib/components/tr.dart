@@ -10,7 +10,8 @@ TableRow tr(String col1, String col2) {
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: text(
             col1,
-            weight: FontWeight.w500,
+            color: Colors.black45,
+            weight: FontWeight.bold,
           ),
         ),
       ),
