@@ -1,9 +1,9 @@
 class ModelBmkg {
   ModelBmkg({
-    required this.infogempa,
+    this.infogempa,
   });
 
-  final Infogempa? infogempa;
+  Infogempa? infogempa;
 
   factory ModelBmkg.fromJson(Map<String, dynamic> json) {
     return ModelBmkg(
@@ -20,10 +20,10 @@ class ModelBmkg {
 
 class Infogempa {
   Infogempa({
-    required this.gempa,
+    this.gempa,
   });
 
-  final List<Gempa> gempa;
+  List<Gempa>? gempa;
 
   factory Infogempa.fromJson(Map<String, dynamic> json) {
     return Infogempa(
@@ -34,34 +34,34 @@ class Infogempa {
   }
 
   Map<String, dynamic> toJson() => {
-        "gempa": gempa.map((x) => x.toJson()).toList(),
+        "gempa": gempa?.map((x) => x.toJson()).toList(),
       };
 }
 
 class Gempa {
   Gempa({
-    required this.tanggal,
-    required this.jam,
-    required this.dateTime,
-    required this.coordinates,
-    required this.lintang,
-    required this.bujur,
-    required this.magnitude,
-    required this.kedalaman,
-    required this.wilayah,
-    required this.potensi,
+    this.tanggal,
+    this.jam,
+    this.dateTime,
+    this.coordinates,
+    this.lintang,
+    this.bujur,
+    this.magnitude,
+    this.kedalaman,
+    this.wilayah,
+    this.potensi,
   });
 
-  final String? tanggal;
-  final String? jam;
-  final DateTime? dateTime;
-  final String? coordinates;
-  final String? lintang;
-  final String? bujur;
-  final String? magnitude;
-  final String? kedalaman;
-  final String? wilayah;
-  final String? potensi;
+  String? tanggal;
+  String? jam;
+  DateTime? dateTime;
+  String? coordinates;
+  String? lintang;
+  String? bujur;
+  String? magnitude;
+  String? kedalaman;
+  String? wilayah;
+  String? potensi;
 
   factory Gempa.fromJson(Map<String, dynamic> json) {
     return Gempa(
